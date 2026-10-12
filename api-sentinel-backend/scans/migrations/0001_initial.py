@@ -1,0 +1,9 @@
+from django.conf import settings
+from django.db import migrations,models
+import django.db.models.deletion, uuid
+class Migration(migrations.Migration):
+    initial=True; dependencies=[migrations.swappable_dependency(settings.AUTH_USER_MODEL),('projects','0001_initial'),('apis','0001_initial')]
+    operations=[
+        migrations.CreateModel(name='Scan',fields=[('id',models.UUIDField(default=uuid.uuid4,editable=False,primary_key=True,serialize=False)),('profile',models.CharField(choices=[('quick','Quick'),('standard','Standard'),('deep','Deep')],default='standard',max_length=20)),('status',models.CharField(choices=[('queued','Queued'),('running','Running'),('completed','Completed'),('failed','Failed'),('canceled','Canceled')],default='queued',max_length=20)),('safe_mode',models.BooleanField(default=True)),('authorization_confirmed',models.BooleanField(default=False)),('progress',models.PositiveSmallIntegerField(default=0)),('summary',models.JSONField(blank=True,default=dict)),('started_at',models.DateTimeField(blank=True,null=True)),('completed_at',models.DateTimeField(blank=True,null=True)),('created_at',models.DateTimeField(auto_now_add=True)),('api',models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,related_name='scans',to='apis.apiservice')),('project',models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,related_name='scans',to='projects.project')),('requested_by',models.ForeignKey(on_delete=django.db.models.deletion.PROTECT,related_name='requested_scans',to=settings.AUTH_USER_MODEL))]),
+        migrations.CreateModel(name='ScanLog',fields=[('id',models.UUIDField(default=uuid.uuid4,editable=False,primary_key=True,serialize=False)),('level',models.CharField(default='info',max_length=20)),('message',models.TextField()),('created_at',models.DateTimeField(auto_now_add=True)),('scan',models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,related_name='logs',to='scans.scan'))]),
+    ]
